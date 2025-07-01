@@ -90,7 +90,7 @@ function validateFileContent($url) {
 
     curl_close($ch);
 
-    print_r($partialContent)
+    print_r($partialContent);
     die();
 
     // Check if the content contains 'BEGIN:VCALENDAR'
