@@ -90,6 +90,9 @@ function validateFileContent($url) {
 
     curl_close($ch);
 
+    print_r($partialContent)
+    die();
+
     // Check if the content contains 'BEGIN:VCALENDAR'
     if (strpos($partialContent, 'BEGIN:VCALENDAR') === false) {
         throw new Exception('The file does not appear to be a valid ICS file (BEGIN:VCALENDAR not found).');
