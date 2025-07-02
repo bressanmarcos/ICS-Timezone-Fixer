@@ -78,6 +78,10 @@ function validateFileContent($url) {
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 
+    //add user agent to allow redirects from Outlook
+
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36');
+
     // Execute cURL request
     $result = curl_exec($ch);
 
@@ -89,6 +93,7 @@ function validateFileContent($url) {
     }
 
     curl_close($ch);
+    
 
     // Check if the content contains 'BEGIN:VCALENDAR'
     if (strpos($partialContent, 'BEGIN:VCALENDAR') === false) {
@@ -123,6 +128,11 @@ function fetchIcsContent($url, $maxFileSize) {
     curl_setopt($ch, CURLOPT_WRITEFUNCTION, $writeFunction);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // 10 seconds to connect
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);        // 30 seconds max execution time
+
+    //add user agent to allow redirects from Outlook
+
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36');
+
 
     // Execute cURL request
     $result = curl_exec($ch);
