@@ -78,14 +78,9 @@ function validateFileContent($url) {
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 
-    //try cookies
+    //add user agent to allow redirects from Outlook
 
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-    curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt'); // Store cookies in this file
-curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookie.txt'); // Read cookies from this file
-curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'); // Some sites require a user agent
-
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36');
 
     // Execute cURL request
     $result = curl_exec($ch);
@@ -134,13 +129,9 @@ function fetchIcsContent($url, $maxFileSize) {
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // 10 seconds to connect
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);        // 30 seconds max execution time
 
-    //try cookies
+    //add user agent to allow redirects from Outlook
 
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-    curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt'); // Store cookies in this file
-curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookie.txt'); // Read cookies from this file
-curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'); // Some sites require a user agent
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36');
 
 
     // Execute cURL request
