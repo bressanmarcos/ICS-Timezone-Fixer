@@ -1,0 +1,21 @@
+services:
+  webserver:
+    image: nginx:stable-alpine
+    restart: unless-stopped
+    volumes:
+      - ./index.php:/var/www/html/index.php
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    working_dir: /var/www/html
+    ports:
+      - "8080:80"
+    depends_on:
+      - php
+
+  php:
+    image: php:8.4-fpm-alpine
+    restart: unless-stopped
+    environment:
+      MAX_FILE_SIZE: 1024000
+    volumes:
+      - ./index.php:/var/www/html/index.php
+      - ./missing_timezones:/var/www/html/missing_timezones

@@ -1,6 +1,15 @@
 <?php
-// Define constants
-define('MAX_FILE_SIZE', 819200); // 800 kB
+declare(strict_types=1);
+
+const DEFAULT_MAX_FILE_SIZE = 819200;
+
+$maxFileSize = getenv('MAX_FILE_SIZE', true);
+
+if ($maxFileSize === false) {
+    $maxFileSize = DEFAULT_MAX_FILE_SIZE;
+}
+
+define('MAX_FILE_SIZE', $maxFileSize);
 define('MISSING_TIMEZONES_FILE', __DIR__ . '/missing_timezones');
 
 // Main execution
@@ -17,7 +26,8 @@ try {
 }
 
 // Function to get the ICS URL from the query parameter
-function getIcsUrl() {
+function getIcsUrl()
+{
     if (!isset($_GET['ics_url']) || empty($_GET['ics_url'])) {
         outputInstructions();
         exit;
@@ -26,7 +36,8 @@ function getIcsUrl() {
 }
 
 // Function to display usage instructions
-function outputInstructions() {
+function outputInstructions()
+{
     echo "<h1>ICS Timezone Fixer</h1>";
     echo "<p>This tool modifies a provided .ics calendar file to include missing timezones, ensuring accurate event times in Google Calendar and other apps.</p>";
     echo "<h2>How to Use:</h2>";
@@ -41,7 +52,8 @@ function outputInstructions() {
 }
 
 // Function to validate the provided URL and enforce HTTPS
-function validateUrl($url) {
+function validateUrl($url)
+{
     if (!filter_var($url, FILTER_VALIDATE_URL)) {
         throw new Exception('Invalid URL.');
     }
@@ -54,7 +66,8 @@ function validateUrl($url) {
 }
 
 // Function to validate the file content by downloading a small portion
-function validateFileContent($url) {
+function validateFileContent($url)
+{
     $ch = curl_init($url);
     if ($ch === false) {
         throw new Exception('Failed to initialize cURL for partial content download.');
@@ -63,7 +76,7 @@ function validateFileContent($url) {
     $partialContent = '';
     $maxBytes = 1024; // Read first 1 KB
 
-    $writeFunction = function($ch, $data) use (&$partialContent, $maxBytes) {
+    $writeFunction = function ($ch, $data) use (&$partialContent, $maxBytes) {
         $length = strlen($data);
         $partialContent .= $data;
         if (strlen($partialContent) >= $maxBytes) {
@@ -97,7 +110,8 @@ function validateFileContent($url) {
 }
 
 // Function to fetch the ICS content with a size limit
-function fetchIcsContent($url, $maxFileSize) {
+function fetchIcsContent($url, $maxFileSize)
+{
     $ch = curl_init($url);
     if ($ch === false) {
         throw new Exception('Failed to initialize cURL.');
@@ -107,7 +121,7 @@ function fetchIcsContent($url, $maxFileSize) {
     $totalDownloaded = 0;
 
     // Define the write function callback
-    $writeFunction = function($ch, $data) use (&$icsContent, &$totalDownloaded, $maxFileSize) {
+    $writeFunction = function ($ch, $data) use (&$icsContent, &$totalDownloaded, $maxFileSize) {
         $length = strlen($data);
         $totalDownloaded += $length;
 
@@ -130,7 +144,7 @@ function fetchIcsContent($url, $maxFileSize) {
     if ($result === false) {
         if (curl_errno($ch) == CURLE_WRITE_ERROR && $totalDownloaded > $maxFileSize) {
             curl_close($ch);
-            throw new Exception('The ICS file exceeds the maximum allowed size of 800 kB.');
+            throw new Exception(sprintf('The ICS file exceeds the maximum allowed size of %d kB.', $maxFileSize / 1024));
         } else {
             $error = curl_error($ch);
             curl_close($ch);
@@ -144,7 +158,8 @@ function fetchIcsContent($url, $maxFileSize) {
 }
 
 // Function to read the missing timezones from the side file
-function readMissingTimezones($filename) {
+function readMissingTimezones($filename)
+{
     if (!file_exists($filename)) {
         throw new Exception('Missing timezones file not found.');
     }
@@ -158,7 +173,8 @@ function readMissingTimezones($filename) {
 }
 
 // Function to insert missing timezones into the ICS content
-function insertMissingTimezones($icsContent, $missingTimezones) {
+function insertMissingTimezones($icsContent, $missingTimezones)
+{
     $pos = strpos($icsContent, 'BEGIN:VEVENT');
     if ($pos === false) {
         throw new Exception('Invalid ICS file format.');
@@ -170,11 +186,13 @@ function insertMissingTimezones($icsContent, $missingTimezones) {
 }
 
 // Function to output the modified ICS content with appropriate headers
-function outputIcsContent($modifiedIcsContent) {
+function outputIcsContent($modifiedIcsContent)
+{
     // Now that everything is validated and modified, set the content type headers
     header('Content-Type: text/calendar; charset=utf-8');
     header('Content-Disposition: attachment; filename="modified_calendar.ics"');
 
     echo $modifiedIcsContent;
 }
+
 ?>
