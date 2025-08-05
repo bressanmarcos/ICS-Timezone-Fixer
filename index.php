@@ -60,8 +60,8 @@ function validateUrl($url) {
  * @throws Exception when the file cannot be read or does not contain BEGIN:VCALENDAR
  */
 function validateFileContent(string $url): void {
-    // Read first 1024 bytes only
-    $partial = fetchFromUrl($url, rangeBytes: 1024);
+    // Read first 100 bytes only
+    $partial = fetchFromUrl($url, rangeBytes: 128);
     if (strpos($partial, 'BEGIN:VCALENDAR') === false) {
         throw new Exception('The file does not appear to be a valid .ics (BEGIN:VCALENDAR not found).');
     }
