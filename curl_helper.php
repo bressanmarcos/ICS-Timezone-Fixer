@@ -1,5 +1,8 @@
 <?php
-// curl_helper.php
+
+// User agent to use for the cURL request.
+// This is a common user agent that should be accepted by most servers.
+define('CURL_USERAGENT', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36');
 
 /**
  * Fetch data from a URL with optional limits.
@@ -31,6 +34,7 @@ function fetchFromUrl(
         CURLOPT_MAXREDIRS      => 5,
         CURLOPT_CONNECTTIMEOUT => $connectTO,
         CURLOPT_TIMEOUT        => $timeout,
+        CURLOPT_USERAGENT      => CURL_USERAGENT,
     ]);
 
     if ($rangeBytes !== null) {
