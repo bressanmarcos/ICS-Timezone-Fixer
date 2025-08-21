@@ -92,7 +92,7 @@ function readMissingTimezones($filename) {
 function insertMissingTimezones($icsContent, $missingTimezones) {
     $pos = strpos($icsContent, 'BEGIN:VEVENT');
     if ($pos === false) {
-        throw new Exception('Invalid ICS file format.');
+        throw new Exception('No events found in calendar.');
     }
 
     $modifiedIcsContent = substr($icsContent, 0, $pos) . $missingTimezones . "\n" . substr($icsContent, $pos);
